@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 
 class Listing(models.Model):
-    Property_Types = [
+    PROPERTY_TYPES = [
         ('apartment', 'Apartment'),
         ('house', 'House'),
         ('studio', 'Studio'),
@@ -25,7 +25,7 @@ class Listing(models.Model):
     capacity = models.IntegerField()
 
     # Property Type
-    property_type = models.CharField(max_length=100, choices=Property_Types)
+    property_type = models.CharField(max_length=30, choices=PROPERTY_TYPES)
 
     # Status
     is_active = models.BooleanField(default=True)
@@ -36,6 +36,11 @@ class Listing(models.Model):
     # Date
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Listing"
+        verbose_name_plural = "Listings"
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.title

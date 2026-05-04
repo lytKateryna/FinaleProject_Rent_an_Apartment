@@ -28,5 +28,10 @@ class ListingView(models.Model):
     # Date
     viewed_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name = "Listing View"
+        verbose_name_plural = "Listing Views"
+        ordering = ['-viewed_at']
+
     def __str__(self):
         return f'{self.listing.title} viewed'

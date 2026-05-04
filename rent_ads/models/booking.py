@@ -34,5 +34,10 @@ class Booking(models.Model):
     end_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name = "Booking"
+        verbose_name_plural = "Bookings"
+        ordering = ['-created_at']
+
     def __str__(self):
         return f'{self.listing.title} - {self.tenant.username}'

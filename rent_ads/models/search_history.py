@@ -27,5 +27,10 @@ class SearchHistory(models.Model):
         auto_now_add=True
     )
 
+    class Meta:
+        verbose_name = "Search History"
+        verbose_name_plural = "Search Histories"
+        ordering = ['-created_at']
+
     def __str__(self):
         return self.keyword
