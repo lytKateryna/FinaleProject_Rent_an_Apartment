@@ -7,12 +7,17 @@ from rent_ads.serializers.listing import (
     ListingDetailSerializer,
     ListingCreateUpdateSerializer,
 )
+from rent_ads.permissions import IsOwnerOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
 class ListingViewSet(viewsets.ModelViewSet):
     queryset = Listing.objects.filter(is_active=True)
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-
+    permission_classes = [
+        IsAuthenticatedOrReadOnly,
+        IsOwnerOrReadOnly
+    ]
 
     filterset_fields = {
         'price': ['lte', 'gte'],
