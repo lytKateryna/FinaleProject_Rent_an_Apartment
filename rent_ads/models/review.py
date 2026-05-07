@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 from rent_ads.models.listing import Listing
 
 class Review(models.Model):
@@ -14,7 +14,7 @@ class Review(models.Model):
 
     # User
     user = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='reviews'
     )

@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 
 
 class Listing(models.Model):
@@ -31,7 +31,7 @@ class Listing(models.Model):
     is_active = models.BooleanField(default=True)
 
     # Owner
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     # Date
     created_at = models.DateTimeField(auto_now_add=True)

@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 from rent_ads.models.listing import Listing
 
 class ListingView(models.Model):
@@ -13,7 +13,7 @@ class ListingView(models.Model):
 
     # User
     user = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='listing_views',
         null=True,

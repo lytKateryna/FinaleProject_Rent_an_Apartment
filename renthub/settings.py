@@ -64,6 +64,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+AUTH_USER_MODEL = 'rent_ads.User'
+
 ROOT_URLCONF = 'renthub.urls'
 
 TEMPLATES = [
