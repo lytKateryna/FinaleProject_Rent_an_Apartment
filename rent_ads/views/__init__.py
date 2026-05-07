@@ -3,6 +3,7 @@ from rent_ads.views.bookings import BookingViewSet
 from rent_ads.views.reviews import ReviewViewSet
 from rent_ads.views.search_histories import SearchHistoryViewSet
 from rent_ads.views.listing_views import ListingViewViewSet
+from rent_ads.views.users import UserViewSet
 
 
 __all__=[
@@ -11,4 +12,5 @@ __all__=[
     'ReviewViewSet',
     'SearchHistoryViewSet',
     'ListingViewViewSet',
+    'UserViewSet'
 ]
