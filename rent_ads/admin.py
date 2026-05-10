@@ -1,6 +1,7 @@
 from django.contrib import admin
 from rent_ads.models import Listing, Booking, Review, SearchHistory, ListingView, User
-from django.contrib.auth.models import Group
+
+from django.contrib.auth.admin import UserAdmin
 
 # Register your models here.
 admin.site.register(Booking)
@@ -11,7 +12,6 @@ admin.site.register(ListingView)
 
 @admin.register(Listing)
 class ListingAdmin(admin.ModelAdmin):
-
     list_display = (
         'title',
         'owner',
@@ -41,8 +41,17 @@ class ListingAdmin(admin.ModelAdmin):
 
     list_per_page = 10
 
+    # def get_queryset(self, request):
+    #     queryset = super().get_queryset(request)
+    #
+    #     if request.user.is_superuser:
+    #         return queryset
+    #     return queryset.filter(owner=request.user)
+
+
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(UserAdmin):
+    model = User
     list_display = [
         'username',
         'email',
@@ -92,6 +101,3 @@ class UserAdmin(admin.ModelAdmin):
         ('Groups', {'fields': ('groups', 'role')}),
         ('User Permissions', {'fields': ('user_permissions',)}),
     )
-
-admin.site.unregister(Group)
-admin.site.register(Group)

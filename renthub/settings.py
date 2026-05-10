@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'rest_framework_simplejwt',
+    'drf_spectacular',
+    'corsheaders',
 ]
 
 REST_FRAMEWORK = {
@@ -57,6 +59,62 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'RentHub Apartment Rental API',
+    'DESCRIPTION': (
+      'Backend API documentation for the apartment rental platform.'
+    ),
+    'VERSION': '1.0.0',
+    # OAS == OpenAPI Schema
+    "OAS_VERSION": "3.1.0",
+
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SERVE_PERMISSIONS": [
+        "rest_framework.permissions.AllowAny"
+    ],
+    "SERVE_AUTHENTICATION": [],
+
+    "AUTHENTICATION_WHITELIST": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication"
+    ],
+
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+
+        "displayOperationId": True,
+
+        "filter": True,
+
+        "persistAuthorization": True,
+
+        "tryItOutEnabled": True,
+
+        "defaultModelsExpandDepth": 2,
+
+        "defaultModelExpandDepth": 2,
+
+        "displayRequestDuration": True,
+
+        "tagsSorter": "alpha",
+
+        "operationsSorter": "alpha"
+
+    },
+    "COMPONENT_SPLIT_REQUEST": True,
+
+    "SORT_OPERATION_PARAMETERS": True,
+
+    "CONTACT": {
+        "name": "Backend Team",
+        "email": "backend_team@example.com",
+    }
 }
 
 SIMPLE_JWT = {
@@ -76,6 +134,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'rent_ads.middlewares.JWTMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 AUTH_USER_MODEL = 'rent_ads.User'

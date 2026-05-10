@@ -1,4 +1,5 @@
-from tokenize import TokenError
+from rest_framework_simplejwt.exceptions import TokenError
+from drf_spectacular.utils import extend_schema
 
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -11,12 +12,13 @@ from rent_ads.serializers.auth import RegisterSerializer, LoginSerializer
 from rent_ads.utils import set_jwt_cookies, REFRESH_COOKIE_NAME, clear_jwt_cookies
 
 
-from django.contrib.auth.models import User
+
 
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
 
+    @extend_schema(request=RegisterSerializer)
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
@@ -42,8 +44,9 @@ class RegisterView(APIView):
 class UserLoginView(APIView):
     permission_classes = [AllowAny]
 
+    @extend_schema(request=LoginSerializer)
     def post(self, request: Request, *args, **kwargs) -> Response:
-        serializer = LoginSerializer(data=request.data)
+        serializer = LoginSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
 
         user = serializer.validated_data['user']
@@ -67,6 +70,7 @@ class UserLoginView(APIView):
 class LogoutUser(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(request=None, responses={200: None})
     def post(self, request: Request, *args, **kwargs) -> Response:
         try:
             refresh_token = request.COOKIES.get(REFRESH_COOKIE_NAME)

@@ -1,60 +1,61 @@
-from django.contrib.auth import authenticate
-from rest_framework import serializers
-from django.contrib.auth.models import User
 from typing import Any
 
+from django.contrib.auth import authenticate, get_user_model
+from rest_framework import serializers
+
+
+User = get_user_model()
+
+
 class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
     class Meta:
         model = User
         fields = [
             'username',
             'email',
-            'password'
+            'password',
+            'role',
         ]
 
     def create(self, validated_data):
         user = User.objects.create_user(
             username=validated_data['username'],
-            email=validated_data.get['email', ''],
-            password=validated_data['password']
+            email=validated_data.get('email', ''),
+            password=validated_data['password'],
+            role=validated_data.get('role', User.Role.TENANT),
         )
         return user
 
 
-
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(
+    email = serializers.EmailField(
         required=True,
         write_only=True,
-        max_length=30,
-        trim_whitespace=True
     )
+
     password = serializers.CharField(
         required=True,
         write_only=True,
-        max_length=30,
-        trim_whitespace=True
+        max_length=128,
+        trim_whitespace=False,
     )
-    def validate(self,attrs:dict[str,str]) -> dict[str,Any]:
-        username = attrs.get('username')
+
+    def validate(self, attrs: dict[str, str]) -> dict[str, Any]:
+        email = attrs.get('email')
         password = attrs.get('password')
 
-        if not username or not password:
-            raise serializers.ValidationError(
-                {
-                    "message":'Username and password to log in are required'
-            }
-            )
         user = authenticate(
             request=self.context.get('request'),
-            username=username,
+            username=email,
             password=password
         )
+
         if not user:
             raise serializers.ValidationError(
-                {
-                    "message":'Invalid username or password.'
-                }
+                {'message': 'Invalid email or password.'}
             )
+
         attrs['user'] = user
         return attrs

@@ -16,26 +16,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-# from rest_framework.routers import DefaultRouter
-# from rent_ads.views.listings import ListingViewSet
-# from rent_ads.views.bookings import BookingViewSet
-# from rent_ads.views.reviews import ReviewViewSet
-# from rent_ads.views.search_histories import SearchHistoryViewSet
-# from rent_ads.views.listing_views import ListingViewViewSet
-#
-# default_router = DefaultRouter()
-#
-# default_router.register(r'listings', ListingViewSet, basename='listing')
-# default_router.register(r'bookings', BookingViewSet, basename='booking')
-# default_router.register(r'reviews', ReviewViewSet, basename='review')
-# default_router.register(r'search_histories', SearchHistoryViewSet, basename='search_history')
-# default_router.register(r'listing_views', ListingViewViewSet, basename='listing_view')
+from django.urls import path, include
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/', include('rent_ads.urls')),
+    path('api/', include('rent_ads.urls')),
+
+    # API documentation
+    path('api/', include('rest_framework.urls')),
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/schema/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger'),
+    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc')
+
 ]
 
 
