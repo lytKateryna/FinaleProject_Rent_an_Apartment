@@ -20,13 +20,19 @@ class ListingViewSet(viewsets.ModelViewSet):
     ]
 
     filterset_fields = {
-        'price': ['lte', 'gte'],
-        'rooms': ['lte', 'gte'],
-        'city':['exact'],
-        'district':['exact'],
-        'property_type':['exact'],
+        'price': ['gte', 'lte'],
+        'rooms': ['gte', 'lte'],
+        'address__city': ['exact'],
+        'address__district': ['exact'],
+        'property_type': ['exact'],
     }
-    search_fields = ['title', 'description']
+    search_fields = [
+        'title',
+        'description',
+        'address__city',
+        'address__district',
+        'address__street',
+    ]
     ordering_fields = ['price', 'created_at']
     ordering = ['-created_at']
 

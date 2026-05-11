@@ -18,12 +18,12 @@ from rent_ads.utils import set_jwt_cookies, REFRESH_COOKIE_NAME, clear_jwt_cooki
 class RegisterView(APIView):
     permission_classes = [AllowAny]
 
-    @extend_schema(request=RegisterSerializer)
+    @extend_schema(request=RegisterSerializer, responses={201: RegisterSerializer})
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            respomse = Response(
+            response = Response(
                 {
                     'user': {
                         'username': user.username,
@@ -32,8 +32,8 @@ class RegisterView(APIView):
                 },
                 status=status.HTTP_201_CREATED
             )
-            set_jwt_cookies(respomse, user)
-            return respomse
+            set_jwt_cookies(response, user)
+            return response
         else:
             return Response(
                 serializer.errors,
@@ -44,7 +44,7 @@ class RegisterView(APIView):
 class UserLoginView(APIView):
     permission_classes = [AllowAny]
 
-    @extend_schema(request=LoginSerializer)
+    @extend_schema(request=LoginSerializer, responses={200: None})
     def post(self, request: Request, *args, **kwargs) -> Response:
         serializer = LoginSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
@@ -52,6 +52,7 @@ class UserLoginView(APIView):
         user = serializer.validated_data['user']
 
         response = Response(
+            {"message": "Login successful"},
             status=status.HTTP_200_OK
         )
         try:

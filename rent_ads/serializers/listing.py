@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rent_ads.models.listing import Listing
+from rent_ads.serializers.address import AddressSerializer
 
 
 class ListingListSerializer(serializers.ModelSerializer):
@@ -17,6 +18,7 @@ class ListingListSerializer(serializers.ModelSerializer):
 
 class ListingDetailSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
+    address = AddressSerializer(read_only=True)
 
     class Meta:
         model = Listing
@@ -25,8 +27,6 @@ class ListingDetailSerializer(serializers.ModelSerializer):
             'title',
             'description',
             'address',
-            'city',
-            'district',
             'price',
             'rooms',
             'area',
@@ -46,8 +46,7 @@ class ListingCreateUpdateSerializer(serializers.ModelSerializer):
             'title',
             'description',
             'address',
-            'city',
-            'district',
+            'address',
             'price',
             'rooms',
             'area',
@@ -55,3 +54,4 @@ class ListingCreateUpdateSerializer(serializers.ModelSerializer):
             'property_type',
             'is_active',
         ]
+

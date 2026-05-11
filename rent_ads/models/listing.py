@@ -1,4 +1,5 @@
 from django.db import models
+from rent_ads.models.address import Address
 from django.conf import settings
 
 
@@ -14,9 +15,11 @@ class Listing(models.Model):
     description = models.TextField()
 
     # Location
-    address = models.CharField(max_length=255)
-    city = models.CharField(max_length=255)
-    district = models.CharField(max_length=100)
+    address = models.ForeignKey(
+        Address,
+        on_delete=models.PROTECT,
+        related_name='listings'
+    )
 
     # Price and Details
     price = models.DecimalField(max_digits=10, decimal_places=2)

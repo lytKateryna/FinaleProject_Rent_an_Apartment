@@ -16,24 +16,24 @@ class ListingAdmin(admin.ModelAdmin):
         'title',
         'owner',
         'price',
-        'city',
+        'get_city',
         'is_active',
         'created_at'
     )
 
     list_filter = (
-        'city',
+        'address__city',
         'property_type',
         'is_active',
-        'created_at'
+        'created_at',
     )
 
     search_fields = (
         'title',
         'description',
-        'address',
-        'city',
-        'district',
+        'address__city',
+        'address__district',
+        'address__street',
         'owner__username'
     )
 
@@ -41,12 +41,10 @@ class ListingAdmin(admin.ModelAdmin):
 
     list_per_page = 10
 
-    # def get_queryset(self, request):
-    #     queryset = super().get_queryset(request)
-    #
-    #     if request.user.is_superuser:
-    #         return queryset
-    #     return queryset.filter(owner=request.user)
+    def get_city(self, obj):
+        return obj.address.city
+
+    get_city.short_description = 'City'
 
 
 @admin.register(User)

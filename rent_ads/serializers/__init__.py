@@ -4,6 +4,7 @@ from rent_ads.serializers.review import ReviewSerializer
 from rent_ads.serializers.search_history import SearchHistorySerializer
 from rent_ads.serializers.listing_view import ListingViewSerializer
 from rent_ads.serializers.users import UserSerializer
+from rent_ads.serializers.address import AddressSerializer
 
 
 __all__ = [
@@ -14,5 +15,6 @@ __all__ = [
     'ReviewSerializer',
     'SearchHistorySerializer',
     'ListingViewSerializer',
-    'UserSerializer'
+    'UserSerializer',
+    'AddressSerializer'
 ]
