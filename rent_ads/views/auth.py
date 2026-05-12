@@ -1,3 +1,5 @@
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework_simplejwt.exceptions import TokenError
 from drf_spectacular.utils import extend_schema
 
@@ -15,8 +17,10 @@ from rent_ads.utils import set_jwt_cookies, REFRESH_COOKIE_NAME, clear_jwt_cooki
 
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class RegisterView(APIView):
     permission_classes = [AllowAny]
+    authentication_classes = []
 
     @extend_schema(request=RegisterSerializer, responses={201: RegisterSerializer})
     def post(self, request):
@@ -41,8 +45,10 @@ class RegisterView(APIView):
             )
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class UserLoginView(APIView):
     permission_classes = [AllowAny]
+    authentication_classes = []
 
     @extend_schema(request=LoginSerializer, responses={200: None})
     def post(self, request: Request, *args, **kwargs) -> Response:
@@ -90,6 +96,7 @@ class LogoutUser(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
         response = Response(
+            {"message": "Logout successful"},
             status=status.HTTP_200_OK
         )
         clear_jwt_cookies(response=response)

@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'drf_spectacular',
     'corsheaders',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 REST_FRAMEWORK = {
@@ -58,6 +59,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
@@ -82,7 +84,8 @@ SPECTACULAR_SETTINGS = {
     "SERVE_AUTHENTICATION": [],
 
     "AUTHENTICATION_WHITELIST": [
-        "rest_framework_simplejwt.authentication.JWTAuthentication"
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication"
     ],
 
     "SWAGGER_UI_SETTINGS": {
@@ -104,7 +107,9 @@ SPECTACULAR_SETTINGS = {
 
         "tagsSorter": "alpha",
 
-        "operationsSorter": "alpha"
+        "operationsSorter": "alpha",
+
+        "withCredentials": True,
 
     },
     "COMPONENT_SPLIT_REQUEST": True,
@@ -130,10 +135,10 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+     'rent_ads.middlewares.JWTMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'rent_ads.middlewares.JWTMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
 
@@ -162,35 +167,35 @@ WSGI_APPLICATION = 'renthub.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.mysql",
-#         "NAME": env.str("DB_NAME"),
-#         "USER": env.str("DB_USER"),
-#         "PASSWORD": env.str("DB_PASSWORD"),
-#         "HOST": env.str("DB_HOST"),
-#         "PORT": env.str("DB_PORT"),
-#     }
-#  }
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": env.str("DB_NAME"),
+        "USER": env.str("DB_USER"),
+        "PASSWORD": env.str("DB_PASSWORD"),
+        "HOST": env.str("DB_HOST"),
+        "PORT": env.str("DB_PORT"),
+    }
+ }
 
-if env.bool("DEBUG"):
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR/ 'db.sqlite3',
-        }
-    }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.mysql",
-            "NAME": env.str("DB_NAME"),
-            "USER": env.str("DB_USER"),
-            "PASSWORD": env.str("DB_PASSWORD"),
-            "HOST": env.str("DB_HOST"),
-            "PORT": env.str("DB_PORT"),
-        }
-    }
+# if env.bool("DEBUG"):
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': BASE_DIR/ 'db.sqlite3',
+#         }
+#     }
+# else:
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.mysql",
+#             "NAME": env.str("DB_NAME"),
+#             "USER": env.str("DB_USER"),
+#             "PASSWORD": env.str("DB_PASSWORD"),
+#             "HOST": env.str("DB_HOST"),
+#             "PORT": env.str("DB_PORT"),
+#         }
+#     }
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 

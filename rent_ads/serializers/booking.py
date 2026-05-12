@@ -20,6 +20,5 @@ class BookingSerializer(serializers.ModelSerializer):
         read_only_fields = [
             'id',
             'tenant',
-            'status',
             'created_at',
         ]

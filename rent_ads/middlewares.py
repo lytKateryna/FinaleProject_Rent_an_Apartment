@@ -11,14 +11,15 @@ from rent_ads.utils import clear_jwt_cookies, set_access_cookie, ACCESS_COOKIE_N
 
 class JWTMiddleware:
     exclude_paths = {
-        '/api/auth/login',
-        '/api/auth/register',
-        '/api/token/refresh',
+        '/api/auth/login/',
+        '/api/auth/register/',
+        '/api/auth/token/',
+        '/api/auth/token/refresh/',
     }
 
     excluded_path_prefixes = {
-        'admin/',
-        '/api/auth/',
+        '/admin/',
+
     }
 
     def __init__(self, get_response: Callable):

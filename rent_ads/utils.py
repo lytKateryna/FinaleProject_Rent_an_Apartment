@@ -2,13 +2,15 @@ from datetime import datetime, timezone
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from typing import Any
 from django.http import HttpResponse
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 ACCESS_COOKIE_NAME = 'access_token'
 REFRESH_COOKIE_NAME = 'refresh_token'
 COOKIE_HTTPONLY = True
 COOKIE_SECURE = False
-COOKIE_SAMESITE = "Strict"
+COOKIE_SAMESITE = "Lax"
 COOKIE_PATH = '/'
 
 
