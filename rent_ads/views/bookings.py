@@ -31,5 +31,3 @@ class BookingViewSet(viewsets.ModelViewSet):
         def create(self, request, *args, **kwargs):
             return super().create(request, *args, **kwargs)
 
-        def perform_create(self, serializer):
-            serializer.save(tenant=self.request.user)

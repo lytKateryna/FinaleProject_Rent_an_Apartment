@@ -1,8 +1,13 @@
+from django.db.models import Count
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rent_ads.models import Listing, SearchHistory
+from yaml import serialize
+
+from rent_ads.models import Listing, SearchHistory, ListingView
 
 from rent_ads.serializers.listing import (
     ListingListSerializer,
@@ -10,7 +15,6 @@ from rent_ads.serializers.listing import (
     ListingCreateUpdateSerializer,
 )
 from rent_ads.permissions import IsOwnerOrReadOnly
-
 
 
 class ListingViewSet(viewsets.ModelViewSet):
@@ -38,7 +42,6 @@ class ListingViewSet(viewsets.ModelViewSet):
     ordering_fields = ['price', 'created_at']
     ordering = ['-created_at']
 
-
     def get_serializer_class(self):
         if self.action == 'list':
             return ListingListSerializer
@@ -48,6 +51,15 @@ class ListingViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    def retrieve(self, request, *args, **kwargs):
+        listing = self.get_object()
+        ListingView.objects.create(
+            listing=listing,
+            user=request.user if request.user.is_authenticated else None
+        )
+        serializer = self.get_serializer(listing)
+        return Response(serializer.data)
 
     def list(self, request, *args, **kwargs):
         search_query = request.query_params.get('search')
@@ -60,4 +72,11 @@ class ListingViewSet(viewsets.ModelViewSet):
 
         return super().list(request, *args, **kwargs)
 
+    @action(detail=False, methods=['get'])
+    def popular(self, request):
+        listings = Listing.objects.filter(is_active=True).annotate(
+            views_count=Count('views')
+        ).order_by('-views_count')
 
+        serializer = self.get_serializer(listings, many=True)
+        return Response(serializer.data)

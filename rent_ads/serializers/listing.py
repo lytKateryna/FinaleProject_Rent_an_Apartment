@@ -4,6 +4,7 @@ from rent_ads.serializers.address import AddressSerializer
 
 
 class ListingListSerializer(serializers.ModelSerializer):
+    views_count = serializers.IntegerField(read_only=True)
     class Meta:
         model = Listing
         fields = [
@@ -13,12 +14,14 @@ class ListingListSerializer(serializers.ModelSerializer):
             'rooms',
             'capacity',
             'area',
+            'views_count',
         ]
 
 
 class ListingDetailSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     address = AddressSerializer(read_only=True)
+    views_count = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Listing
@@ -36,6 +39,7 @@ class ListingDetailSerializer(serializers.ModelSerializer):
             'owner',
             'created_at',
             'updated_at',
+            'views_count',
         ]
 
 
