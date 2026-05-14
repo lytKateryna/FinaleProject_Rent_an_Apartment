@@ -1,0 +1,14 @@
+**
+
+!Dockerfile
+!requirements.txt
+!manage.py
+!paginators.py
+!permissions.py
+!middlewares.py
+!utils.py
+
+!rent_ads
+!rent_ads/**
+!renthub
+!renthub/**
