@@ -19,3 +19,14 @@ class IsBookingOwnerOrLandlord(BasePermission):
                 obj.tenant == request.user or
                 obj.listing.owner == request.user
         )
+
+
+
+class IsLandlordOrReadOnly(BasePermission):
+    def has_permission(self, request, view):
+        if request.method in SAFE_METHODS:
+            return True
+        return (request.user
+                and request.user.is_authenticated
+                and request.user.role == 'landlord'
+                )

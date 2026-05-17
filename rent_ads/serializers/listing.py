@@ -50,7 +50,6 @@ class ListingCreateUpdateSerializer(serializers.ModelSerializer):
             'title',
             'description',
             'address',
-            'address',
             'price',
             'rooms',
             'area',

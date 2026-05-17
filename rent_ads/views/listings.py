@@ -2,11 +2,9 @@ from django.db.models import Count
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-from yaml import serialize
-
 from rent_ads.models import Listing, SearchHistory, ListingView
 
 from rent_ads.serializers.listing import (
@@ -14,14 +12,14 @@ from rent_ads.serializers.listing import (
     ListingDetailSerializer,
     ListingCreateUpdateSerializer,
 )
-from rent_ads.permissions import IsOwnerOrReadOnly
+from rent_ads.permissions import IsOwnerOrReadOnly, IsLandlordOrReadOnly
 
 
 class ListingViewSet(viewsets.ModelViewSet):
     queryset = Listing.objects.filter(is_active=True)
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     permission_classes = [
-        IsAuthenticatedOrReadOnly,
+        IsLandlordOrReadOnly,
         IsOwnerOrReadOnly
     ]
 

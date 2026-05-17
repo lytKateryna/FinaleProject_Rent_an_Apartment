@@ -1,29 +1,39 @@
 services:
   web:
-    image: ${DOCKERHUB_USER}/${APP_NAME}:${APP_TAG}
+   container_name: RentHub
+   build:
+      context: .
+      dockerfile: Dockerfile
+   restart: always
 
-    restart: always
-
-    command: >
+   command: >
       sh -c "
         python manage.py migrate &&
-        python manage.py collectstatic --noinput &&
-        gunicorn renthub.wsgi:application --bind 0.0.0.0:8000
+        python manage.py runserver 0.0.0.0:8000
       "
 
-    env_file:
-      - path: .env
+   env_file:
+      - .env
 
-    ports:
+   environment:
+      USE_REMOTE_DB: "True"
+      DB_ENGINE: mysql
+      DB_HOST: database
+      DB_PORT: "3306"
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+   ports:
       - "8000:8000"
-    volumes:
+   volumes:
       - app_logs:/app/logs
       - avatars:/app/avatars
-    depends_on:
-      database:
-        condition: service_healthy
+   depends_on:
+     database:
+       condition: service_healthy
 
-    networks:
+   networks:
       - django_app
 
   database:
@@ -44,7 +54,7 @@ services:
       - mysql_data:/var/lib/mysql
 
     ports:
-      - "3306:3306"
+      - "33066:3306"
 
     healthcheck:
       test: [ "CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u\"$$MYSQL_USER\" -p\"$$MYSQL_PASSWORD\" --silent" ]
