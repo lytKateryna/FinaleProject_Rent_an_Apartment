@@ -15,9 +15,10 @@ class BookingViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        print("BOOKINGS USER:", user.email, user.username, user.id, user.role, user.is_superuser)
+
         if user.is_anonymous:
             return Booking.objects.none()
+
         if user.is_superuser:
             return Booking.objects.all()
 
@@ -30,7 +31,7 @@ class BookingViewSet(viewsets.ModelViewSet):
         return Booking.objects.none()
 
     def perform_create(self, serializer):
-        user =self.request.user
+        user = self.request.user
         listing = serializer.validated_data['listing']
 
         if user.role != 'tenant':
