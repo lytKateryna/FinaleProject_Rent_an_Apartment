@@ -1,6 +1,6 @@
 from drf_spectacular.utils import extend_schema, OpenApiExample
 from rest_framework import viewsets
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, PermissionDenied
 from rent_ads.models import Booking
 from rent_ads.serializers.booking import BookingSerializer
 from rent_ads.permissions import IsBookingOwnerOrLandlord
@@ -41,6 +41,14 @@ class BookingViewSet(viewsets.ModelViewSet):
             raise ValidationError("You cannot book your own listing.")
 
         serializer.save(tenant=user)
+
+    def destroy(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            raise PermissionDenied(
+                "Only administrators can delete bookings."
+            )
+
+        return super().destroy(request, *args, **kwargs)
 
     @extend_schema(
         examples=[
