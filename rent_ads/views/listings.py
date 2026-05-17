@@ -16,7 +16,9 @@ from rent_ads.permissions import IsOwnerOrReadOnly, IsLandlordOrReadOnly
 
 
 class ListingViewSet(viewsets.ModelViewSet):
-    queryset = Listing.objects.filter(is_active=True)
+    queryset = Listing.objects.filter(is_active=True).annotate(
+        views_count=Count('views')
+    )
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     permission_classes = [
         IsLandlordOrReadOnly,

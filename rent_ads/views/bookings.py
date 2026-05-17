@@ -1,6 +1,6 @@
 from drf_spectacular.utils import extend_schema, OpenApiExample
 from rest_framework import viewsets
-
+from rest_framework.exceptions import ValidationError
 from rent_ads.models import Booking
 from rent_ads.serializers.booking import BookingSerializer
 from rent_ads.permissions import IsBookingOwnerOrLandlord
@@ -30,7 +30,16 @@ class BookingViewSet(viewsets.ModelViewSet):
         return Booking.objects.none()
 
     def perform_create(self, serializer):
-        serializer.save(tenant=self.request.user)
+        user =self.request.user
+        listing = serializer.validated_data['listing']
+
+        if user.role != 'tenant':
+            raise ValidationError("Only tenants can create bookings.")
+
+        if listing.owner == user:
+            raise ValidationError("You cannot book your own listing.")
+
+        serializer.save(tenant=user)
 
     @extend_schema(
         examples=[
