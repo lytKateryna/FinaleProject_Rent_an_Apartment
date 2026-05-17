@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rent_ads.models.listing import Listing
 from rent_ads.serializers.address import AddressSerializer
+from rent_ads.serializers.review import ReviewSerializer
 
 
 class ListingListSerializer(serializers.ModelSerializer):
@@ -22,6 +23,7 @@ class ListingDetailSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     address = AddressSerializer(read_only=True)
     views_count = serializers.IntegerField(read_only=True)
+    reviews = ReviewSerializer(many=True, read_only=True)
 
     class Meta:
         model = Listing
@@ -40,6 +42,7 @@ class ListingDetailSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
             'views_count',
+            'reviews',
         ]
 
 
