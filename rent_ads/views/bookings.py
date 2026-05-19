@@ -1,6 +1,7 @@
 from django.db.models import Q
 from drf_spectacular.utils import extend_schema, OpenApiExample
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError, PermissionDenied
 from rent_ads.models import Booking
 from rent_ads.serializers.booking import BookingSerializer
@@ -12,7 +13,7 @@ User = get_user_model()
 
 class BookingViewSet(viewsets.ModelViewSet):
     serializer_class = BookingSerializer
-    permission_classes = [IsBookingOwnerOrLandlord]
+    permission_classes = [IsAuthenticated, IsBookingOwnerOrLandlord]
 
     def get_queryset(self):
         user = self.request.user

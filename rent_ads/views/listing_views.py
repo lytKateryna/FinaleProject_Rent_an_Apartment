@@ -1,4 +1,5 @@
 from rest_framework import mixins, viewsets
+from rest_framework.permissions import IsAdminUser
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from rent_ads.models import ListingView
@@ -12,7 +13,7 @@ class ListingViewViewSet(
 ):
     queryset = ListingView.objects.all()
     serializer_class = ListingViewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAdminUser, IsAuthenticatedOrReadOnly]
 
 
 
