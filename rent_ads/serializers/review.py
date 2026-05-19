@@ -28,6 +28,6 @@ class ReviewSerializer(serializers.ModelSerializer):
 
         if not has_booking:
             raise serializers.ValidationError(
-                'You can leave a review only after confirmed booking.'
+                'You can leave a review only after completed booking.'
             )
         return attrs
