@@ -1,3 +1,4 @@
+from django.db.models import Q
 from drf_spectacular.utils import extend_schema, OpenApiExample
 from rest_framework import viewsets
 from rest_framework.exceptions import ValidationError, PermissionDenied
@@ -33,12 +34,23 @@ class BookingViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         user = self.request.user
         listing = serializer.validated_data['listing']
-
-        if user.role != 'tenant':
-            raise ValidationError("Only tenants can create bookings.")
+        start_date = serializer.validated_data['start_date']
+        end_date = serializer.validated_data['end_date']
 
         if listing.owner == user:
             raise ValidationError("You cannot book your own listing.")
+
+        overlapping_bookings = Booking.objects.filter(listing=listing).exclude(
+            status='cancelled'
+        ).filter(
+            Q(start_date__lte=end_date) &
+            Q(end_date__gte=start_date)
+        )
+
+        if overlapping_bookings.exists():
+            raise ValidationError(
+                "Unfortunately, this property is already booked for these dates."
+            )
 
         serializer.save(tenant=user)
 
