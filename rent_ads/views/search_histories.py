@@ -1,8 +1,8 @@
 from django.db.models import Count
-from rest_framework.decorators import action
-from rest_framework.response import Response
 from rest_framework import mixins, viewsets
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 
 from rent_ads.models import SearchHistory
 from rent_ads.serializers.search_history import SearchHistorySerializer
@@ -15,7 +15,11 @@ class SearchHistoryViewSet(
 ):
     queryset = SearchHistory.objects.all()
     serializer_class = SearchHistorySerializer
-    permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        if self.action == 'popular':
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
     @action(detail=False, methods=["get"])
     def popular(self, request):
@@ -24,7 +28,5 @@ class SearchHistoryViewSet(
             .values('keyword')
             .annotate(count=Count('keyword'))
             .order_by('-count')[:10]
-
         )
         return Response(popular_keywords)
-
