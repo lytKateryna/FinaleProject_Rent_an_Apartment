@@ -238,7 +238,7 @@ docker compose ps
 ```
 
 # Project Structure
-
+```text
 rent_ads/
 │
 ├── __init__.py
@@ -293,7 +293,7 @@ renthub/
 ├── urls.py
 ├── asgi.py
 └── wsgi.py
-
+'''
 .dockerignore
 .env
 Dockerfile
@@ -302,7 +302,9 @@ docker-compose.local.yaml
 requirements.txt
 manage.py
 README.md
+```
 
+---
 
 # Author
 
